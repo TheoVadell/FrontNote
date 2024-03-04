@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -10,7 +10,18 @@ import Filters from './components/Filters'
 import NoteList from './components/NoteList'
 import AddNoteForm from './components/AddNoteForm'
 
+
 function App() {
+
+  useEffect(() => {
+
+    fetch('http://localhost:3000/notes/')
+      .then(response => response.json())
+      .then(data => {
+        notesRAWSetter(data);
+        setNotes(data);
+      });
+  }, []);
 
   const pureNotes = [
     { id: 11, text: "première note" },
@@ -24,8 +35,10 @@ function App() {
 
 
   const [filters, filtersSetter] = useState(
-    {keyword: ''}
+    { keyword: '' }
   );
+
+
 
   function onRemoveBtnHandler(noteToDelete) {
     const noteRawNewValues = ArrayLib.remove(notesRAW, noteToDelete);
